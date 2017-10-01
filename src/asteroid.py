@@ -17,31 +17,19 @@ class Asteroid(SpaceBody):
         vt = SpaceBody.player.vt
 
         gamma = 1/math.sqrt(1 - vx ** 2 - vy ** 2)
-        matrix = np.array([[1,   0,  vx],
-                           [0,   1,  vy],
-                           [-vx, -vy,  1]])
+        x_prm = gamma * (vx * dt + vx * dt)
+        y_prm = gamma * (vy * dt + vy * dt)
+        t_prm = gamma * (-vx * vx * dt - vy * vy * dt + dt)
 
-        input_vec = np.array([[vx * dt],
-                              [vy * dt],
-                              [dt]])
-
-        out_vec = gamma * np.dot(matrix, input_vec)
-
-        self.x -= out_vec[0, 0]
-        self.y -= out_vec[1, 0]
-        self.t += out_vec[2, 0]
+        self.x -= x_prm
+        self.y -= y_prm
+        self.t += t_prm
 
         gamma = 1 / math.sqrt(1 - (vx * dt) ** 2 - (vy * dt) ** 2)
-        matrix1 = np.array([[1,   0,   -vx * dt],
-                           [0,   1,    -vy * dt],
-                           [-vx * dt, -vy * dt,  1]])
+        x_prm = gamma * (self.x - vx * dt * self.t)
+        y_prm = gamma * (self.y - vy * dt * self.t)
+        t_prm = gamma * (vx * dt * self.x + vy * dt * self.y + self.t)
 
-        input_vec = np.array([[self.x],
-                              [self.y],
-                              [self.t]])
-
-        out_vec = gamma * np.dot(matrix1, input_vec)
-
-        self.x = out_vec[0, 0]
-        self.y = out_vec[1, 0]
-        self.t = out_vec[2, 0]
+        self.x = x_prm
+        self.y = y_prm
+        self.t = t_prm
