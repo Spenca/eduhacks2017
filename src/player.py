@@ -1,4 +1,4 @@
-import pygame
+import pyjsdl as pygame
 import math
 
 from .space_body import SpaceBody

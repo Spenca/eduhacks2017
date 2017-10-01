@@ -1,5 +1,5 @@
 from src.game import Game
-from Server import Server
+# from Server import Server
 
 def main():
     # Need to start server in here

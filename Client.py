@@ -2,7 +2,7 @@ import socket
 import select
 import json
 import time
-import pickle
+import cPickle as pickle
 
 class Client:
 

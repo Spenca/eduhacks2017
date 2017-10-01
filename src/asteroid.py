@@ -1,4 +1,4 @@
-import pygame
+import pyjsdl as pygame
 import numpy as np
 import math
 

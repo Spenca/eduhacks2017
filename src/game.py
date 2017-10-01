@@ -1,6 +1,10 @@
-import pickle
+from __future__ import unicode_literals
+from __future__ import print_function 
 
-import pygame
+# import pickle
+import json
+
+import pyjsdl as pygame
 import sys
 import datetime
 import random
@@ -66,8 +70,8 @@ class Game:
     def send(self, msg):
         try:
             # Not sure how well this will work with multiple clients
-            tuple = {'x': msg.x, 'y': msg.y, 't': msg.t, "vx": msg.vx, "vy": msg.vy, "vt": msg.vt, "rot": msg.rotation}
-            string = pickle.dumps(tuple, pickle.HIGHEST_PROTOCOL)
+            player_position = {'x': msg.x, 'y': msg.y, 't': msg.t, "vx": msg.vx, "vy": msg.vy, "vt": msg.vt, "rot": msg.rotation}
+            string = json.dumps(player_position)
             file = self.sock.makefile("wb")
             file.write(string)
             file.flush()
@@ -78,7 +82,7 @@ class Game:
         receive = select.select([self.sock], [], [], 0.001)
         if len(receive[0]):
             message = self.sock.recv(6969)
-            message = pickle.loads(message)
+            message = json.loads(message)
             self.player.x = message['x']
             self.player.y = message['y']
             self.player.t = message['t']
