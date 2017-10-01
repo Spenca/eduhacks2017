@@ -1,4 +1,5 @@
 import pygame
+import numpy as np
 
 from src.space_body import SpaceBody
 
