@@ -92,7 +92,6 @@ class Game:
             self.render_world(self.display)
             self.handle_input()
             self.update_environment()
-            print("player_loop")
 
     def draw_statusbar(self, display):
         pygame.draw.rect(display, pygame.Color(191, 87, 0), pygame.Rect(0, 0, SCREEN_WIDTH, TEXT_HEIGHT + 5))
@@ -110,13 +109,12 @@ class Game:
         self.draw_statusbar(display)
 
         for body in SpaceBody.space_bodies:
-            print(vars(body))
-            pos_move = body.get_screen_pos(self.player, SCALE, SCREEN_WIDTH, SCREEN_HEIGHT)
+            pos_move, time = body.get_screen_pos(self.player, SCALE, SCREEN_WIDTH, SCREEN_HEIGHT)
             display.blit(body.image, body
                          .image.get_rect()
                          .move(*pos_move))
 
-            time_surface = self.font.render(str("%.1f" % body.t), True, (200, 238, 144))
+            time_surface = self.font.render(str("%.1f" % time), True, (200, 238, 144))
             x, y = pos_move
             self.display.blit(time_surface, (x, y - body.image.get_rect().height/2 - 8))
 

@@ -29,8 +29,8 @@ class Player(SpaceBody):
         self.move(dvx, dvy)
 
     def move(self, dvx, dvy):
-        self.vx = (self.vx + dvx) / (1 + abs(self.vx * dvx))
-        self.vy = (self.vy + dvy) / (1 + abs(self.vy * dvy))
+        self.vx = (self.vx + dvx) / (1 + abs(self.vx * math.sqrt(dvx ** 2 + dvy ** 2)))
+        self.vy = (self.vy + dvy) / (1 + abs(self.vy * math.sqrt(dvy ** 2 + dvy ** 2)))
 
     def rotate_right(self, dt):
         self.rotation -= ROTATION_SPEED * dt
