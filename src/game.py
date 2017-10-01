@@ -3,6 +3,7 @@ import pickle
 import pygame
 import sys
 import datetime
+import random
 from src.asteroid import *
 from src.player import *
 from src.world import World
@@ -15,6 +16,9 @@ SCREEN_HEIGHT = 700
 TEXT_HEIGHT = 20
 FPS = 60
 SCALE = 60 # 1 light sec is 60 pixels
+MAX_ASTEROIDS = 100
+ASTEROIDS_RANGE_X = (-100, 100)
+ASTEROIDS_RANGE_Y = (-100, 100)
 
 
 class Game:
@@ -38,10 +42,7 @@ class Game:
         self.world = World()
         self.player = Player()
 
-        Asteroid(2, 2)
-        Asteroid(0, 2)
-        Asteroid(2, 0)
-        Asteroid(5, 5)
+        self.generate_asteroids()
         self.connect_to_server()
 
     def connect_to_server(self):
@@ -167,3 +168,8 @@ class Game:
 
         for body in SpaceBody.space_bodies:
             body.update(dt)
+
+    def generate_asteroids(self):
+        for x in range(-10, 10):
+            for y in range(-10, 10):
+                Asteroid(-1 + x * 5, -1 + y * 5)

@@ -32,15 +32,15 @@ class Asteroid(SpaceBody):
         self.t += out_vec[2, 0]
 
         gamma = 1 / math.sqrt(1 - (vx * dt) ** 2 - (vy * dt) ** 2)
-        matrix = np.array([[1,   0,  -vx * dt],
-                           [0,   1,  -vy * dt],
+        matrix1 = np.array([[1,   0,   -vx * dt],
+                           [0,   1,    -vy * dt],
                            [-vx * dt, -vy * dt,  1]])
 
         input_vec = np.array([[self.x],
                               [self.y],
                               [self.t]])
 
-        out_vec = gamma * np.dot(matrix, input_vec)
+        out_vec = gamma * np.dot(matrix1, input_vec)
 
         self.x = out_vec[0, 0]
         self.y = out_vec[1, 0]
