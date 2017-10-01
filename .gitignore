@@ -141,6 +141,10 @@ ENV/
 .spyderproject
 .spyproject
 
+# Spenca
+.DS_Store
+pygame.pdf
+
 # Rope project settings
 .ropeproject
 

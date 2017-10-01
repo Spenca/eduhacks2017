@@ -9,7 +9,8 @@ from src.space_body import SpaceBody
 SCREEN_WIDTH = 800
 SCREEN_HEIGHT = 600
 TEXT_HEIGHT = 20
-FPS = 25
+FPS = 60
+SCALE = 20 # 1 lsec is 20 pixels
 
 
 class Game:
@@ -19,6 +20,8 @@ class Game:
         Game.game = self
 
         pygame.init()
+        pygame.mixer.music.load("assets/music/420.wav")
+        pygame.mixer.music.play(loops=-1, start=0.0)
         self.clock = pygame.time.Clock()
 
         self.display = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -26,9 +29,6 @@ class Game:
         self.font = pygame.font.Font("assets/fonts/unifont-10.0.06.ttf", TEXT_HEIGHT)
         self.world = World()
         self.player = Player()
-
-        self.all_objects = []
-        self.asteroids = []
 
         Asteroid(10, 10)
         Asteroid(5, 5)
@@ -40,13 +40,13 @@ class Game:
             self.update_environment()
 
     def draw_statusbar(self, display):
-        pygame.draw.rect(display, pygame.Color(200, 100, 40), pygame.Rect(0, 0, SCREEN_WIDTH, TEXT_HEIGHT + 5))
+        pygame.draw.rect(display, pygame.Color(191, 87, 0), pygame.Rect(0, 0, SCREEN_WIDTH, TEXT_HEIGHT + 5))
 
-        surface = self.font.render("Time: " + str(self.player.t) + " seconds | " +
-                                   "x: " + str(self.player.x) + " light seconds | " +
-                                   "y: " + str(self.player.y) + " light seconds"
+        surface = self.font.render("Time: " + str("%.1f" % self.player.t) + " seconds | " +
+                                   "x: " + "%.1f"%self.player.x + " light seconds | " +
+                                   "y: " + "%.1f"%self.player.y + " light seconds"
 
-                                   , True, (50, 100, 255))
+                                   , True, (144, 238, 144))
         self.display.blit(surface, (0, 0))
 
     def render_world(self, display):
@@ -54,13 +54,11 @@ class Game:
 
         self.draw_statusbar(display)
 
-        display.blit(self.player.image, self.player.image.get_rect().move((SCREEN_WIDTH / 2, SCREEN_HEIGHT /2)))
-
-        for asteroid in self.asteroids:
-            display.blit(asteroid.image, asteroid
+        for body in SpaceBody.space_bodies:
+            display.blit(body.image, body
                          .image.get_rect()
-                         .move(asteroid.x - self.player.x,
-                               asteroid.y - self.player.y))
+                         .move((body.x - self.player.x)*SCALE + SCREEN_WIDTH/2,
+                               (-body.y + self.player.y)*SCALE + SCREEN_HEIGHT/2))
 
         pygame.display.flip()
 

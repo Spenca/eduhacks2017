@@ -12,3 +12,7 @@ class SpaceBody:
     def update(self, dt):
         self.x += self.vx * dt
         self.y += self.vy * dt
+
+        # Can't exceed speed of light
+        assert abs(self.vx) <= 1
+        assert abs(self.vy) <= 1
