@@ -10,7 +10,7 @@ from src.space_body import SpaceBody
 import socket
 import select
 
-SCREEN_WIDTH = 1000
+SCREEN_WIDTH = 1180
 SCREEN_HEIGHT = 700
 TEXT_HEIGHT = 20
 FPS = 60
@@ -95,11 +95,14 @@ class Game:
 
     def draw_statusbar(self, display):
         pygame.draw.rect(display, pygame.Color(191, 87, 0), pygame.Rect(0, 0, SCREEN_WIDTH, TEXT_HEIGHT + 5))
-
         surface = self.font.render("Time: " + str("%.1f" % self.player.t) + " seconds | " +
-                                   "x: " + "%.1f"%self.player.x + " light seconds | " +
-                                   "y: " + "%.1f"%self.player.y + " light seconds"
-
+                                   "x: " + "%.1f" % self.player.x + " light seconds | " +
+                                   "y: " + "%.1f" % self.player.y + " light seconds | " +
+                                   "θ: " + "%.1f" % (self.player.rotation * 180 / math.pi) + "° | " +
+                                   "Vx: " + "%.1f" % self.player.vx + "c | " +
+                                   "Vy: " + "%.1f" % self.player.vy + "c | " +
+                                   "γ: " + (
+                                   "%.3f" % (1 / (math.sqrt(1 - ((self.player.vx ** 2) + (self.player.vy ** 2))))))
                                    , True, (144, 238, 144))
         self.display.blit(surface, (0, 0))
 
