@@ -3,6 +3,7 @@ import numpy as np
 
 
 class SpaceBody:
+    player = None
     space_bodies = []
 
     def __init__(self, x, y):
@@ -18,6 +19,6 @@ class SpaceBody:
 
     def get_screen_pos(self, player, scale, width, height):
 
-        return (((self.x - player.x) * scale - self.image.get_rect().width / 2 + width / 2,
-                 -(self.y - player.y) * scale - self.image.get_rect().height / 2 + height / 2),
+        return ((self.x * scale - self.image.get_rect().width / 2 + width / 2,
+                 -self.y * scale - self.image.get_rect().height / 2 + height / 2),
                 self.t)

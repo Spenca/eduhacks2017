@@ -9,6 +9,8 @@ ROTATION_SPEED = 1
 
 class Player(SpaceBody):
     def __init__(self):
+        SpaceBody.player = self
+
         super().__init__(0, 0)
         self.t = 0
         self.vx = 0
@@ -55,8 +57,6 @@ class Player(SpaceBody):
     def update(self, dt):
         super(Player, self).update(dt)
 
-        self.x += self.vx * dt
-        self.y += self.vy * dt
         self.t += self.vt * dt
 
         # Can't exceed speed of light
