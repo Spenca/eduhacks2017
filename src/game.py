@@ -6,17 +6,21 @@ from src.player import *
 from src.world import World
 from src.space_body import SpaceBody
 
-SCREEN_WIDTH = 800
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 1000
+SCREEN_HEIGHT = 700
 TEXT_HEIGHT = 20
 FPS = 60
-SCALE = 20 # 1 lsec is 20 pixels
+SCALE = 60 # 1 light sec is 60 pixels
 
 
 class Game:
     game = None
 
     def __init__(self):
+        self.controls = {"up": False,
+                         "down": False,
+                         "left": False,
+                         "right": False}
         Game.game = self
 
         pygame.init()
@@ -30,7 +34,9 @@ class Game:
         self.world = World()
         self.player = Player()
 
-        Asteroid(10, 10)
+        Asteroid(2, 2)
+        Asteroid(0, 2)
+        Asteroid(2, 0)
         Asteroid(5, 5)
 
     def run(self):
@@ -55,10 +61,14 @@ class Game:
         self.draw_statusbar(display)
 
         for body in SpaceBody.space_bodies:
+            pos_move = body.get_screen_pos(self.player, SCALE, SCREEN_WIDTH, SCREEN_HEIGHT)
             display.blit(body.image, body
                          .image.get_rect()
-                         .move((body.x - self.player.x)*SCALE + SCREEN_WIDTH/2,
-                               (-body.y + self.player.y)*SCALE + SCREEN_HEIGHT/2))
+                         .move(*pos_move))
+
+            time_surface = self.font.render(str("%.1f" % body.t), True, (200, 238, 144))
+            x, y = pos_move
+            self.display.blit(time_surface, (x, y - body.image.get_rect().height/2 - 8))
 
         pygame.display.flip()
 
@@ -75,16 +85,35 @@ class Game:
                     self.quit_game()
 
                 if event.key == pygame.K_UP:
-                    self.player.thrust_forward()
+                    self.controls["up"] = True
                 if event.key == pygame.K_DOWN:
-                    self.player.thrust_backwards()
+                    self.controls["down"] = True
                 if event.key == pygame.K_RIGHT:
-                    self.player.rotate_right()
+                    self.controls["right"] = True
                 if event.key == pygame.K_LEFT:
-                    self.player.rotate_left()
+                    self.controls["left"] = True
+
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    self.controls["up"] = False
+                if event.key == pygame.K_DOWN:
+                    self.controls["down"] = False
+                if event.key == pygame.K_RIGHT:
+                    self.controls["right"] = False
+                if event.key == pygame.K_LEFT:
+                    self.controls["left"] = False
 
     def update_environment(self):
         dt = self.clock.tick(FPS) / 1000
+
+        if self.controls["up"]:
+            self.player.thrust_forward(dt)
+        if self.controls["down"]:
+            self.player.thrust_backwards(dt)
+        if self.controls["right"]:
+            self.player.rotate_right(dt)
+        if self.controls["left"]:
+            self.player.rotate_left(dt)
 
         for body in SpaceBody.space_bodies:
             body.update(dt)
