@@ -1,3 +1,5 @@
+import pickle
+
 import pygame
 import sys
 import datetime
@@ -5,6 +7,8 @@ from src.asteroid import *
 from src.player import *
 from src.world import World
 from src.space_body import SpaceBody
+import socket
+import select
 
 SCREEN_WIDTH = 1000
 SCREEN_HEIGHT = 700
@@ -38,12 +42,57 @@ class Game:
         Asteroid(0, 2)
         Asteroid(2, 0)
         Asteroid(5, 5)
+        self.connect_to_server()
+
+    def connect_to_server(self):
+        self.host = "127.0.0.1"
+        self.port = 2345
+        try:
+            self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+        except socket.error as msg:
+            print("Failed to create socket: " + str(msg))
+
+        try:
+            server_ip = socket.gethostbyname(self.host)
+        except socket.gaierror:
+            print("Server could not be resolved")
+            raise
+
+        self.sock.connect((server_ip, self.port))
+        print("Connected to server")
+
+    def send(self, msg):
+        try:
+            # Not sure how well this will work with multiple clients
+            tuple = {'x': msg.x, 'y': msg.y, 't': msg.t, "vx": msg.vx, "vy": msg.vy, "vt": msg.vt, "rot": msg.rotation}
+            string = pickle.dumps(tuple, pickle.HIGHEST_PROTOCOL)
+            file = self.sock.makefile("wb")
+            file.write(string)
+            file.flush()
+            print("message sent")
+        except socket.error:
+            print("Messaging failed: %s" % (socket.error))
+        receive = select.select([self.sock], [], [], 0.001)
+        if len(receive[0]):
+            message = self.sock.recv(6969)
+            message = pickle.loads(message)
+            self.player.x = message['x']
+            self.player.y = message['y']
+            self.player.t = message['t']
+            self.player.vx = message["vx"]
+            self.player.vy = message["vy"]
+            self.player.vt = message["vt"]
+            self.player.rotation = message["rot"]
 
     def run(self):
         while True:
+            # msg to server
+            self.send(self.player)
             self.render_world(self.display)
             self.handle_input()
             self.update_environment()
+            print("player_loop")
 
     def draw_statusbar(self, display):
         pygame.draw.rect(display, pygame.Color(191, 87, 0), pygame.Rect(0, 0, SCREEN_WIDTH, TEXT_HEIGHT + 5))
@@ -61,6 +110,7 @@ class Game:
         self.draw_statusbar(display)
 
         for body in SpaceBody.space_bodies:
+            print(vars(body))
             pos_move = body.get_screen_pos(self.player, SCALE, SCREEN_WIDTH, SCREEN_HEIGHT)
             display.blit(body.image, body
                          .image.get_rect()

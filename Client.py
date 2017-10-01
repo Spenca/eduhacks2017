@@ -23,13 +23,14 @@ class Client:
 			raise
 
 		self.sock.connect((server_ip, self.port))
-
 		print("Connected to server")
+
 		self.Loop()
 
 	def Loop(self):
 		input = True
 		while True:
+
 			if input:
 				self.send()
 				input = False
@@ -42,16 +43,11 @@ class Client:
 	def send(self):
 		try:
 			# Not sure how well this will work with multiple clients
-			# self.sock.sendall()
 			string = pickle.dumps(self.msg, pickle.HIGHEST_PROTOCOL)
 			file = self.sock.makefile("wb")
-			# file.write("%d\n" % len(string))
 			file.write(string)
 			file.flush()
 			print("message sent")
-			# data_string = json.dumps(self.msg)
-			# data_string = json.loads(self.msg)
-			# self.sock.send(data_string)
 		except socket.error:
 			print("Messaging failed: %s" % (socket.error))
 

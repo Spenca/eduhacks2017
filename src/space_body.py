@@ -48,5 +48,5 @@ class SpaceBody:
         x = xyt_prime[0, 0]
         y = xyt_prime[1, 0]
 
-        return ((x - player.x) * scale - self.image.get_rect().width / 2 + width / 2,
-                (-y + player.y) * scale - self.image.get_rect().height / 2 + height / 2)
+        return ((x - player.x) * scale - player.image.get_rect().width / 2 + width / 2,
+                (-y + player.y) * scale - player.image.get_rect().height / 2 + height / 2)
