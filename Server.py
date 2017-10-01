@@ -71,7 +71,8 @@ class Server:
 			file.flush()
 			print("message sent")
 		except socket.error:
-			print("Messaging failed: %s" % (socket.error))
+			pass
+			#print("Messaging failed: %s" % (socket.error))
 
 
 	def bind(self, sock, host, port):

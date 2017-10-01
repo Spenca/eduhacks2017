@@ -59,7 +59,7 @@ class Game:
             print("Server could not be resolved")
             raise
 
-        self.sock.connect((server_ip, self.port))
+        #self.sock.connect((server_ip, self.port))
         print("Connected to server")
 
     def send(self, msg):
@@ -72,7 +72,8 @@ class Game:
             file.flush()
             print("message sent")
         except socket.error:
-            print("Messaging failed: %s" % (socket.error))
+            pass
+            #print("Messaging failed: %s" % (socket.error))
         receive = select.select([self.sock], [], [], 0.001)
         if len(receive[0]):
             message = self.sock.recv(6969)

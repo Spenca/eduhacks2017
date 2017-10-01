@@ -49,7 +49,8 @@ class Client:
 			file.flush()
 			print("message sent")
 		except socket.error:
-			print("Messaging failed: %s" % (socket.error))
+			pass
+			#print("Messaging failed: %s" % (socket.error))
 
 if __name__ == "__main__":
 	Client()
